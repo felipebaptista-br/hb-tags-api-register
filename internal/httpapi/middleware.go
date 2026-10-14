@@ -105,10 +105,18 @@ func (a *api) logRequests(next http.Handler) http.Handler {
 	})
 }
 
+const qrRouteTimeout = 10 * time.Minute
+
 func (a *api) timeout(next http.Handler) http.Handler {
 	body := "{\"error\":\"timeout\"}\n"
-	timed := http.TimeoutHandler(next, a.requestTimeout, body)
+	short := http.TimeoutHandler(next, a.requestTimeout, body)
+	long := http.TimeoutHandler(next, qrRouteTimeout, body)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		timed := short
+		if r.URL.Path == "/api/admin/tags/qrs" {
+			timed = long
+			_ = http.NewResponseController(w).SetWriteDeadline(time.Now().Add(qrRouteTimeout))
+		}
 		timed.ServeHTTP(timeoutResponseWriter{ResponseWriter: w}, r)
 	})
 }

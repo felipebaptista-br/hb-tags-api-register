@@ -1,0 +1,306 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-10-14T11:00:00.000Z",
+  "__export_source": "hb-tags-api-register",
+  "resources": [
+    {
+      "_id": "wrk_hbtags",
+      "_type": "workspace",
+      "parentId": null,
+      "name": "hb-tags-api",
+      "description": "Rotas do MVP. Ajuste api_key no ambiente local para o valor de ADMIN_API_KEY.",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_hbtags_base",
+      "_type": "environment",
+      "parentId": "wrk_hbtags",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:8080",
+        "api_key": "change-me",
+        "tag_id": "23456789AB"
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url", "api_key", "tag_id"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_healthz",
+      "_type": "request",
+      "parentId": "wrk_hbtags",
+      "name": "GET /healthz",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.base_url }}/healthz",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -9,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_admin_tags_post",
+      "_type": "request",
+      "parentId": "wrk_hbtags",
+      "name": "POST /api/admin/tags",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/admin/tags",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"quantity\": 2,\n  \"batch\": \"lote-2026-10\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-api-key",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -8,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_admin_tags_get",
+      "_type": "request",
+      "parentId": "wrk_hbtags",
+      "name": "GET /api/admin/tags",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/tags",
+      "body": {},
+      "parameters": [
+        {
+          "id": "pair_tags_limit",
+          "name": "limit",
+          "value": "50",
+          "disabled": false
+        },
+        {
+          "id": "pair_tags_offset",
+          "name": "offset",
+          "value": "0",
+          "disabled": false
+        }
+      ],
+      "headers": [
+        {
+          "name": "x-api-key",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -7,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_admin_tags_csv",
+      "_type": "request",
+      "parentId": "wrk_hbtags",
+      "name": "GET /api/admin/tags CSV",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/tags",
+      "body": {},
+      "parameters": [
+        {
+          "id": "pair_csv_format",
+          "name": "format",
+          "value": "csv",
+          "disabled": false
+        },
+        {
+          "id": "pair_csv_limit",
+          "name": "limit",
+          "value": "50",
+          "disabled": false
+        },
+        {
+          "id": "pair_csv_offset",
+          "name": "offset",
+          "value": "0",
+          "disabled": false
+        }
+      ],
+      "headers": [
+        {
+          "name": "x-api-key",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -6,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_admin_qrs_post",
+      "_type": "request",
+      "parentId": "wrk_hbtags",
+      "name": "POST /api/admin/tags/qrs",
+      "description": "quantity 2 de propósito. Corpo {} nessa rota grava 1000 tags.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/admin/tags/qrs",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"quantity\": 2,\n  \"batch\": \"lote-2026-10\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-api-key",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -5,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_admin_qrs_get",
+      "_type": "request",
+      "parentId": "wrk_hbtags",
+      "name": "GET /api/admin/tags/qrs",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/tags/qrs",
+      "body": {},
+      "parameters": [
+        {
+          "id": "pair_qrs_batch",
+          "name": "batch",
+          "value": "lote-2026-10",
+          "disabled": false
+        },
+        {
+          "id": "pair_qrs_limit",
+          "name": "limit",
+          "value": "2",
+          "disabled": false
+        }
+      ],
+      "headers": [
+        {
+          "name": "x-api-key",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -4,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_resolve",
+      "_type": "request",
+      "parentId": "wrk_hbtags",
+      "name": "GET /api/tags/{id}/resolve",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/tags/{{ _.tag_id }}/resolve",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -3,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_public_tag",
+      "_type": "request",
+      "parentId": "wrk_hbtags",
+      "name": "GET /api/public/tags/{id}",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/public/tags/{{ _.tag_id }}",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -2,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_categories",
+      "_type": "request",
+      "parentId": "wrk_hbtags",
+      "name": "GET /api/categories",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/categories",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    }
+  ]
+}

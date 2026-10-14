@@ -28,7 +28,11 @@ docker compose up -d postgres
 docker compose exec postgres psql -U hbtags -d postgres -c "CREATE DATABASE hbtags_test;"
 ```
 
-Copie `.env.example` para `.env` e exporte as variáveis. Os alvos do Makefile leem `.env` quando o arquivo existe. É preciso Go 1.23+ e GNU Make.
+Copie `.env.example` para `.env`. Os alvos do Makefile leem `.env` quando o arquivo existe. É preciso Go 1.23+ e GNU Make.
+
+No Cursor, com a extensão Go, F5 usa a configuração `hb-tags-api` em `.vscode/launch.json`. Ela inicia `cmd/api` e carrega o `.env`. O `go run` abaixo faz o mesmo pela linha de comando, desde que as variáveis já estejam no ambiente.
+
+No Insomnia, importe [docs/insomnia.json](docs/insomnia.json). No ambiente local, troque `api_key` pelo valor de `ADMIN_API_KEY`.
 
 ```bash
 make migrate-up

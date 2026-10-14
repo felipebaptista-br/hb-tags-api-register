@@ -81,7 +81,7 @@ Não há detalhe interno (SQL, stack, corpo do perfil).
 | `not_found` | 404 | rota desconhecida, ou tag pública que não está `ACTIVATED` |
 | `method_not_allowed` | 405 | método HTTP que a rota não aceita |
 | `rate_limited` | 429 | mais requisições do que o limite do IP |
-| `timeout` | 503 | a requisição passou de 10s |
+| `timeout` | 503 | a requisição passou de 10s. Em `/api/admin/tags/qrs`, o prazo é 3 minutos |
 | `internal` | 500 | falha interna ou panic |
 | `id_generation_failed` | 500 | não foi possível gerar ids únicos para o lote |
 | `unavailable` | 503 | `GET /healthz` e o banco não responde ao ping |
@@ -173,6 +173,8 @@ Gera tags e devolve um ZIP com um JPG por id. Mesma autenticação do POST de ta
 Sucesso é `200` com `Content-Type: application/zip` e `Content-Disposition: attachment`. O arquivo se chama `tags-qrs.zip`, ou `tags-{batch}.zip` quando o lote vem no corpo. Dentro há um `{id}.jpg` por tag. Cada imagem é o QR de `APP_URL/{id}`, 512 px, correção de erro média, JPEG qualidade 95. As linhas ficam `GENERATED`.
 
 Erro de validação: `400 {"error":"invalid_body"}`. Falha ao completar os ids: `500 {"error":"id_generation_failed"}`. O erro sai em JSON, antes de qualquer byte do ZIP.
+
+POST e GET desta rota podem levar até 3 minutos. As outras rotas continuam em 10 segundos.
 
 ### GET /api/admin/tags/qrs
 
