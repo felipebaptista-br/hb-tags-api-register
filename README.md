@@ -4,6 +4,8 @@ API do MVP de pulseiras com QR code. Gera tags, resolve o próximo passo de um Q
 
 A API não cadastra usuários, não ativa tags, não faz login, checkout nem notificações.
 
+Rotas, modelo, erros e visibilidade do perfil: [docs/API.md](docs/API.md).
+
 ## Variáveis
 
 | Variável | Uso |

@@ -30,34 +30,13 @@ func (a *api) adminTags(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *api) createTags(w http.ResponseWriter, r *http.Request) {
-	var req struct {
-		Quantity *int    `json:"quantity"`
-		Batch    *string `json:"batch"`
-	}
-	dec := json.NewDecoder(http.MaxBytesReader(w, r.Body, maxCreateBody))
-	if err := dec.Decode(&req); err != nil {
-		writeError(w, http.StatusBadRequest, "invalid_body")
-		return
-	}
-	if err := dec.Decode(&struct{}{}); !errors.Is(err, io.EOF) {
+	quantity, batch, ok := decodeTagBatch(w, r, 1)
+	if !ok {
 		writeError(w, http.StatusBadRequest, "invalid_body")
 		return
 	}
 
-	quantity := 1
-	if req.Quantity != nil {
-		quantity = *req.Quantity
-	}
-	if quantity < 1 || quantity > 1000 {
-		writeError(w, http.StatusBadRequest, "invalid_body")
-		return
-	}
-	if req.Batch != nil && (len(*req.Batch) < 1 || len(*req.Batch) > 50) {
-		writeError(w, http.StatusBadRequest, "invalid_body")
-		return
-	}
-
-	created, err := a.store.InsertGeneratedTags(r.Context(), quantity, req.Batch, ids.Generate)
+	created, err := a.store.InsertGeneratedTags(r.Context(), quantity, batch, ids.Generate)
 	if err != nil {
 		if errors.Is(err, store.ErrIDGenerationFailed) {
 			a.logger.Error("create_tags", "request_id", requestIDFrom(r.Context()), "err", err)
@@ -79,9 +58,34 @@ func (a *api) createTags(w http.ResponseWriter, r *http.Request) {
 	}
 	writeJSON(w, http.StatusCreated, createTagsResponse{
 		Count: len(tags),
-		Batch: req.Batch,
+		Batch: batch,
 		Tags:  tags,
 	})
+}
+
+func decodeTagBatch(w http.ResponseWriter, r *http.Request, defaultQuantity int) (quantity int, batch *string, ok bool) {
+	var req struct {
+		Quantity *int    `json:"quantity"`
+		Batch    *string `json:"batch"`
+	}
+	dec := json.NewDecoder(http.MaxBytesReader(w, r.Body, maxCreateBody))
+	if err := dec.Decode(&req); err != nil {
+		return 0, nil, false
+	}
+	if err := dec.Decode(&struct{}{}); !errors.Is(err, io.EOF) {
+		return 0, nil, false
+	}
+	quantity = defaultQuantity
+	if req.Quantity != nil {
+		quantity = *req.Quantity
+	}
+	if quantity < 1 || quantity > 1000 {
+		return 0, nil, false
+	}
+	if req.Batch != nil && (len(*req.Batch) < 1 || len(*req.Batch) > 50) {
+		return 0, nil, false
+	}
+	return quantity, req.Batch, true
 }
 
 type createTagsResponse struct {

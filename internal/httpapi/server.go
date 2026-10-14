@@ -45,6 +45,7 @@ func New(cfg config.Config, st *store.Store, logger *slog.Logger, limit rate.Lim
 
 func (a *api) routes() http.Handler {
 	mux := http.NewServeMux()
+	mux.HandleFunc("/api/admin/tags/qrs", a.adminTagQRs)
 	mux.HandleFunc("/api/admin/tags", a.adminTags)
 	mux.HandleFunc("/api/tags/{id}/resolve", a.withCORS(a.resolve))
 	mux.HandleFunc("/api/public/tags/{id}", a.withCORS(a.publicTag))

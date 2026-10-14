@@ -117,6 +117,22 @@ func (s *Store) ListTags(ctx context.Context, batch *string, limit, offset int) 
 	return pgx.CollectRows(rows, pgx.RowToStructByPos[ListedTag])
 }
 
+// ListGeneratedTags returns one page of tags that were never activated.
+func (s *Store) ListGeneratedTags(ctx context.Context, batch *string, limit, offset int) ([]ListedTag, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT id, status::text, batch
+		FROM tag
+		WHERE status = 'GENERATED'
+		  AND ($1::text IS NULL OR batch = $1)
+		ORDER BY created_at, id
+		LIMIT $2 OFFSET $3
+	`, batch, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	return pgx.CollectRows(rows, pgx.RowToStructByPos[ListedTag])
+}
+
 // TagStatus returns the tag status. found is false when the id does not exist.
 func (s *Store) TagStatus(ctx context.Context, id string) (status string, found bool, err error) {
 	err = s.pool.QueryRow(ctx, `SELECT status::text FROM tag WHERE id = $1`, id).Scan(&status)
